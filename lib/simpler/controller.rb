@@ -67,5 +67,9 @@ module Simpler
       @response.write(ERB.new(text).result(binding))
     end
 
+    def status(code)
+      @response.status = code
+    end
+
   end
 end
