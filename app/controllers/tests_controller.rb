@@ -4,6 +4,7 @@ class TestsController < Simpler::Controller
     @time = Time.now
 
     status 200
+    headers['Some-Header'] = 'Some-Text'
     render plain: "Time is now #{@time}"
   end
 
