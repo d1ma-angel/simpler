@@ -3,17 +3,19 @@ require_relative 'view'
 module Simpler
   class Controller
 
-    attr_reader :name, :request, :response
+    attr_reader :name, :request, :response, :params
 
     def initialize(env)
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
+      @params = {}
     end
 
-    def make_response(action)
+    def make_response(action, id)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
+      params['id'] = id
 
       set_default_headers
       send(action)

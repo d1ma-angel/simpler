@@ -31,8 +31,8 @@ module Simpler
       if route
         controller = route.controller.new(env)
         action = route.action
-
-        make_response(controller, action)
+        id = parse_id(env)
+        make_response(controller, action, id)
       else
         not_found_response
       end
@@ -54,8 +54,8 @@ module Simpler
       @db = Sequel.connect(database_config)
     end
 
-    def make_response(controller, action)
-      controller.make_response(action)
+    def make_response(controller, action, id)
+      controller.make_response(action, id)
     end
 
     def not_found_response
@@ -66,5 +66,8 @@ module Simpler
       @response
     end
 
+    def parse_id(env)
+      env['PATH_INFO'].split('/').drop(1)[1].to_i
+    end
   end
 end

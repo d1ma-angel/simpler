@@ -2,17 +2,19 @@ module Simpler
   class Router
     class Route
 
-      attr_reader :controller, :action
+      attr_reader :method, :controller, :action, :id
 
-      def initialize(method, path, controller, action)
+      def initialize(method, url, controller, action, id)
         @method = method
-        @path = path
+        @url = url
         @controller = controller
         @action = action
+        @id = id
       end
 
       def match?(method, path)
-        @method == method && path.match(@path)
+        path = path.split('/').drop(1)
+        @method == method && path[0].match(@url) && @id == !path[1].nil?
       end
 
     end

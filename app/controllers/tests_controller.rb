@@ -12,4 +12,14 @@ class TestsController < Simpler::Controller
 
   end
 
+  def show
+    set_test
+  end
+
+  private
+
+  def set_test
+    @id = params['id']
+  end
+
 end
