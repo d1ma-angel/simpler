@@ -18,6 +18,7 @@ module Simpler
 
     def bootstrap!
       setup_database
+      setup_log
       require_app
       require_routes
     end
@@ -27,6 +28,12 @@ module Simpler
     end
 
     def call(env)
+      @app = run_app(env)
+      write_log(env)
+      @app
+    end
+
+    def run_app(env)
       route = @router.route_for(env)
       if route
         controller = route.controller.new(env)
@@ -54,6 +61,23 @@ module Simpler
       @db = Sequel.connect(database_config)
     end
 
+    def setup_log
+      @log = File.open(Simpler.root.join('log/app.log'), 'a+')
+    end
+
+    def write_log(env)
+      @log.write(log_record(env))
+    end
+
+    def log_record(env)
+      record = "Request: #{env['REQUEST_METHOD']} #{env['REQUEST_URI']}\n"
+      record += "Handler: #{env['simpler.controller'].class.name}##{env['simpler.action']}\n"
+      record += "Parameters: #{env['simpler.controller'].request.params}\n"
+      record += "Response: #{env['simpler.controller'].response.status} [#{env['simpler.controller'].response.header['Content-Type']}] "
+      record += "#{env['simpler.controller'].name}/#{env['simpler.action']}.html.erb\n\n"
+      record
+    end
+
     def make_response(controller, action, id)
       controller.make_response(action, id)
     end
@@ -67,7 +91,7 @@ module Simpler
     end
 
     def parse_id(env)
-      env['PATH_INFO'].split('/').drop(1)[1].to_i
+      env['PATH_INFO'].split('/').drop(1)[1]
     end
   end
 end

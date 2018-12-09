@@ -15,7 +15,7 @@ module Simpler
     def make_response(action, id)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
-      params['id'] = id
+      params['id'] = id.to_i if !id.nil?
 
       set_default_headers
       send(action)
@@ -23,6 +23,7 @@ module Simpler
 
       @response.finish
     end
+
 
     private
 
@@ -32,6 +33,10 @@ module Simpler
 
     def set_default_headers
       @response['Content-Type'] = 'text/html'
+    end
+
+    def params
+      @request.params
     end
 
     def write_response
@@ -44,10 +49,6 @@ module Simpler
 
     def render_body
       View.new(@request.env).render(binding)
-    end
-
-    def params
-      @request.params
     end
 
     def render(template)

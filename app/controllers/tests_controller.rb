@@ -14,6 +14,7 @@ class TestsController < Simpler::Controller
 
   def show
     set_test
+    status 200
   end
 
   private

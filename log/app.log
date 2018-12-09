@@ -1,0 +1,5 @@
+Request: GET /tests/101
+Handler: TestsController#show
+Parameters: {"id"=>101}
+Response: 200 [text/html] tests/show.html.erb
+
