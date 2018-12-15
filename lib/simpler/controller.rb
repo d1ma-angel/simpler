@@ -9,13 +9,11 @@ module Simpler
       @name = extract_name
       @request = Rack::Request.new(env)
       @response = Rack::Response.new
-      @params = {}
     end
 
-    def make_response(action, id)
+    def make_response(action, env)
       @request.env['simpler.controller'] = self
       @request.env['simpler.action'] = action
-      params['id'] = id.to_i if !id.nil?
 
       set_default_headers
       send(action)
@@ -23,7 +21,6 @@ module Simpler
 
       @response.finish
     end
-
 
     private
 
@@ -36,7 +33,7 @@ module Simpler
     end
 
     def params
-      @request.params
+      @request.params.merge(@request.env['simpler.route_params'])
     end
 
     def write_response

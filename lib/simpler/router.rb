@@ -28,11 +28,8 @@ module Simpler
       route_point = route_point.split('#')
       controller = controller_from_string(route_point[0])
       action = route_point[1]
-      path = path.split('/').drop(1)
-      url = path[0]
-      path[1] == ":id" ? id = true : id = false
 
-      route = Route.new(method, url, controller, action, id)
+      route = Route.new(method, controller, action, path)
       @routes.push(route)
     end
 

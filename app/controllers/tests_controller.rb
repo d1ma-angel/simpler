@@ -20,7 +20,7 @@ class TestsController < Simpler::Controller
   private
 
   def set_test
-    @id = params['id']
+    @params = params
   end
 
 end
