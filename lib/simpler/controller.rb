@@ -22,6 +22,10 @@ module Simpler
       @response.finish
     end
 
+    def render(template)
+      View.new(@request.env, template).render
+    end
+
     private
 
     def extract_name
@@ -45,26 +49,7 @@ module Simpler
     end
 
     def render_body
-      View.new(@request.env).render(binding)
-    end
-
-    def render(template)
-      if template[:plain]
-        plain(template[:plain])
-      elsif template[:inline]
-        inline(template[:inline])
-      else
-        @request.env['simpler.template'] = template
-      end
-    end
-
-    def plain(text)
-      @response.write(text)
-      @response['Content-Type'] = 'text/plain'
-    end
-
-    def inline(text)
-      @response.write(ERB.new(text).result(binding))
+      View::HTMLRenderer.new(@request.env).render(binding)
     end
 
     def status(code)
