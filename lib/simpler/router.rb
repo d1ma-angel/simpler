@@ -28,8 +28,8 @@ module Simpler
       route_point = route_point.split('#')
       controller = controller_from_string(route_point[0])
       action = route_point[1]
-      route = Route.new(method, path, controller, action)
 
+      route = Route.new(method, controller, action, path)
       @routes.push(route)
     end
 
